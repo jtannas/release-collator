@@ -34,7 +34,6 @@ jobs:
           touch unreleased_changes/PR_$NUMBER.yml
       - name: Create PR_<Number>.yml
         run: |
-          echo "# THIS IS A GENERATED FILE; DO NOT EDIT IT" > unreleased_changes/PR_$NUMBER.yml
           echo "title: '${{ github.event.pull_request.title }}'" > unreleased_changes/PR_$NUMBER.yml
           echo "pullRequest: '${{ github.event.pull_request.html_url }}'" >> unreleased_changes/PR_$NUMBER.yml
           echo "prNumber: $NUMBER" >> unreleased_changes/PR_$NUMBER.yml
@@ -49,5 +48,5 @@ jobs:
         with:
           add: unreleased_changes
           message: "Create/Update PR_$NUMBER.yml"
-          author_name: UnreleasedDocBot
+          author_name: UnreleasedChangesBuilderBot
           push: true
