@@ -20,3 +20,16 @@ jobs:
           NUMBER: ${{ github.event.pull_request.number }}
           LABELS: semver-patch
         if: ${{ !contains(steps.pr-labels.outputs.labels , 'semver-') }}
+      - name: Update PR_<Number>.yaml
+        uses: fjogeleit/yaml-update-action@v0.16.0
+        with:
+          valueFile: "unreleased_doc/PR_$NUMBER.yaml"
+          changes: |
+            {
+              "title": "${{ github.event.pull_request.title }}",
+              "pullRequest": ${{ github.event.pull_request.number }},
+              "author": "${{ github.event.pull_request.user.login }}",
+              "labels": ${{ steps.pr-labels.outputs.labels }},
+              "semver": "ToDo"
+            }
+          commitChange: true
