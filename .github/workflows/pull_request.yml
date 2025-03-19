@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
       - name: Get PR labels
         id: pr-labels
         uses: joerick/pr-labels-action@v1.0.8
