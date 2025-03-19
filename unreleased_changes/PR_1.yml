@@ -1,5 +1,5 @@
 title: 'UnreleasedChangesBuilderBot'
-pullRequest: 'https://api.github.com/repos/jtannas/release-collator/pulls/1'
+pullRequest: 'https://github.com/jtannas/release-collator/pull/1'
 prNumber: 1
 author: 'jtannas'
 labels:  semver-patch 
