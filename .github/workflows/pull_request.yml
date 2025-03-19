@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "# THIS IS A GENERATED FILE; DO NOT EDIT IT" > unreleased_changes/PR_$NUMBER.yml
           echo "title: '${{ github.event.pull_request.title }}'" > unreleased_changes/PR_$NUMBER.yml
-          echo "pullRequest: '${{ github.event.pull_request.url }}'" >> unreleased_changes/PR_$NUMBER.yml
+          echo "pullRequest: '${{ github.event.pull_request.html_url }}'" >> unreleased_changes/PR_$NUMBER.yml
           echo "prNumber: $NUMBER" >> unreleased_changes/PR_$NUMBER.yml
           echo "author: '${{ github.event.pull_request.user.login }}'" >> unreleased_changes/PR_$NUMBER.yml
           echo "labels: ${{ steps.pr-labels.outputs.labels }}" >> unreleased_changes/PR_$NUMBER.yml
