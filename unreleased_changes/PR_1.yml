@@ -1,5 +1,6 @@
 title: 'WIP: PR Bot'
-pullRequest: 1
+pullRequest: 'https://api.github.com/repos/jtannas/release-collator/pulls/1'
+prNumber: 1
 author: 'jtannas'
 labels:  semver-patch 
 semverPatch: true
