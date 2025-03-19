@@ -1,4 +1,4 @@
-name: Pull Request Tests
+name: Pull Request Notes Action
 
 on:
   pull_request:
@@ -10,9 +10,9 @@ jobs:
   GenerateNotes:
     runs-on: ubuntu-latest
     steps:
-      - run: gh issue edit "$NUMBER" --add-label "$LABELS"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.pull_request.number }}
-          LABELS: semver-patch
+      - name: Get PR labels
+        id: pr-labels
+        uses: joerick/pr-labels-action@v1.0.8
+      - name: Check for existing semver label
+        if: contains(steps.pr-labels.outputs.labels, 'semver-')
+        run: echo "Semver label found"
