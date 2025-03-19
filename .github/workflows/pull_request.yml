@@ -43,3 +43,4 @@ jobs:
           add: unreleased_changes/PR_$NUMBER.yaml
           message: "Create/Update PR_$NUMBER.yaml"
           author_name: UnreleasedDocBot
+          push: true
