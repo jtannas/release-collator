@@ -11,6 +11,8 @@ permissions:
 jobs:
   GenerateNotes:
     runs-on: ubuntu-latest
+    env:
+      NUMBER: ${{ github.event.pull_request.number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,7 +25,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.pull_request.number }}
           LABELS: semver-patch
         if: ${{ !contains(steps.pr-labels.outputs.labels , 'semver-') }}
       - name: Recreate the PR_<Number>.yml
@@ -42,8 +43,6 @@ jobs:
           echo "semverMinor: ${{ contains(steps.pr-labels.outputs.labels , 'semver-minor') }}" >> unreleased_changes/PR_$NUMBER.yml
           echo "semverMajor: ${{ contains(steps.pr-labels.outputs.labels , 'semver-major') }}" >> unreleased_changes/PR_$NUMBER.yml
           echo "semverEpoch: ${{ contains(steps.pr-labels.outputs.labels , 'semver-epoch') }}" >> unreleased_changes/PR_$NUMBER.yml
-        env:
-          NUMBER: ${{ github.event.pull_request.number }}
       - name: Add & Commit
         uses: EndBug/add-and-commit@v9.1.4
         with:
