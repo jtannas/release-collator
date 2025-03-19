@@ -1,0 +1,53 @@
+name: Pull Request Notes Action
+
+on:
+  pull_request:
+    types: [opened, edited, labeled, unlabeled, synchronize]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  GenerateNotes:
+    runs-on: ubuntu-latest
+    env:
+      NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Get PR labels
+        id: pr-labels
+        uses: joerick/pr-labels-action@v1.0.8
+      - run: gh issue edit "$NUMBER" --add-label "$LABELS"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          LABELS: semver-patch
+        if: ${{ !contains(steps.pr-labels.outputs.labels , 'semver-') }}
+      - name: Recreate the PR_<Number>.yml
+        run: |
+          mkdir -p unreleased_changes
+          rm -f unreleased_changes/PR_$NUMBER.yml
+          touch unreleased_changes/PR_$NUMBER.yml
+      - name: Create PR_<Number>.yml
+        run: |
+          echo "# THIS IS A GENERATED FILE; DO NOT EDIT IT" > unreleased_changes/PR_$NUMBER.yml
+          echo "title: '${{ github.event.pull_request.title }}'" > unreleased_changes/PR_$NUMBER.yml
+          echo "pullRequest: '${{ github.event.pull_request.html_url }}'" >> unreleased_changes/PR_$NUMBER.yml
+          echo "prNumber: $NUMBER" >> unreleased_changes/PR_$NUMBER.yml
+          echo "author: '${{ github.event.pull_request.user.login }}'" >> unreleased_changes/PR_$NUMBER.yml
+          echo "labels: ${{ steps.pr-labels.outputs.labels }}" >> unreleased_changes/PR_$NUMBER.yml
+          echo "semverPatch: ${{ contains(steps.pr-labels.outputs.labels , 'semver-patch') }}" >> unreleased_changes/PR_$NUMBER.yml
+          echo "semverMinor: ${{ contains(steps.pr-labels.outputs.labels , 'semver-minor') }}" >> unreleased_changes/PR_$NUMBER.yml
+          echo "semverMajor: ${{ contains(steps.pr-labels.outputs.labels , 'semver-major') }}" >> unreleased_changes/PR_$NUMBER.yml
+          echo "semverEpoch: ${{ contains(steps.pr-labels.outputs.labels , 'semver-epoch') }}" >> unreleased_changes/PR_$NUMBER.yml
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          add: unreleased_changes
+          message: "Create/Update PR_$NUMBER.yml"
+          author_name: UnreleasedDocBot
+          push: true

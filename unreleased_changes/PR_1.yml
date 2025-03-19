@@ -1,0 +1,9 @@
+title: 'UnreleasedChangesBuilderBot'
+pullRequest: 'https://github.com/jtannas/release-collator/pull/1'
+prNumber: 1
+author: 'jtannas'
+labels:  semver-patch 
+semverPatch: true
+semverMinor: false
+semverMajor: false
+semverEpoch: false
