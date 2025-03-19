@@ -5,6 +5,7 @@ on:
 
 permissions:
   pull-requests: write
+  contents: write
 
 jobs:
   GenerateNotes:
@@ -13,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Get PR labels
         id: pr-labels
         uses: joerick/pr-labels-action@v1.0.8
