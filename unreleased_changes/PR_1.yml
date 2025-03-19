@@ -1,4 +1,4 @@
-title: 'WIP: PR Bot'
+title: 'UnreleasedChangesBuilderBot'
 pullRequest: 'https://api.github.com/repos/jtannas/release-collator/pulls/1'
 prNumber: 1
 author: 'jtannas'
