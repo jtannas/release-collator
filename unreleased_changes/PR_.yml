@@ -1,8 +1,8 @@
 title: 'WIP: PR Bot'
 pullRequest: 
 author: 'jtannas'
-labels:  semver-minor 
-semverPatch: false
-semverMinor: true
+labels:  semver-patch 
+semverPatch: true
+semverMinor: false
 semverMajor: false
 semverEpoch: false
