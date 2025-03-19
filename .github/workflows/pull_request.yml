@@ -20,16 +20,24 @@ jobs:
           NUMBER: ${{ github.event.pull_request.number }}
           LABELS: semver-patch
         if: ${{ !contains(steps.pr-labels.outputs.labels , 'semver-') }}
-      - name: Update PR_<Number>.yaml
-        uses: fjogeleit/yaml-update-action@v0.16.0
+      - name: Recreate the PR_<Number>.yaml
+        run: |
+          mkdir -p unreleased_changes
+          rm -f unreleased_changes/PR_$NUMBER.yaml
+          touch unreleased_changes/PR_$NUMBER.yaml
+      - name: Create PR_<Number>.yaml
+        run: |
+          echo "title: '${{ github.event.pull_request.title }}'" > unreleased_changes/PR_$NUMBER.yaml
+          echo "pullRequest: $NUMBER" >> unreleased_changes/PR_$NUMBER.yaml
+          echo "author: '${{ github.event.pull_request.user.login }}'" >> unreleased_changes/PR_$NUMBER.yaml
+          echo "labels: ${{ steps.pr-labels.outputs.labels }}" >> unreleased_changes/PR_$NUMBER.yaml
+          echo "semverPatch: ${{ contains(steps.pr-labels.outputs.labels , 'semver-patch') }}" >> unreleased_changes/PR_$NUMBER.yaml
+          echo "semverMinor: ${{ contains(steps.pr-labels.outputs.labels , 'semver-minor') }}" >> unreleased_changes/PR_$NUMBER.yaml
+          echo "semverMajor: ${{ contains(steps.pr-labels.outputs.labels , 'semver-major') }}" >> unreleased_changes/PR_$NUMBER.yaml
+          echo "semverEpoch: ${{ contains(steps.pr-labels.outputs.labels , 'semver-epoch') }}" >> unreleased_changes/PR_$NUMBER.yaml
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v9.1.4
         with:
-          valueFile: "unreleased_doc/PR_$NUMBER.yaml"
-          changes: |
-            {
-              "title": "${{ github.event.pull_request.title }}",
-              "pullRequest": ${{ github.event.pull_request.number }},
-              "author": "${{ github.event.pull_request.user.login }}",
-              "labels": ${{ steps.pr-labels.outputs.labels }},
-              "semver": "ToDo"
-            }
-          commitChange: true
+          add: unreleased_changes/PR_$NUMBER.yaml
+          message: "Create/Update PR_$NUMBER.yaml"
+          author_name: UnreleasedDocBot
