@@ -2,6 +2,7 @@ name: Pull Request Notes Action
 
 on:
   pull_request:
+    types: [opened, edited, labeled, unlabeled, synchronize]
 
 permissions:
   pull-requests: write
