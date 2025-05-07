@@ -1,9 +1,9 @@
-title: 'test different ref to entrypoint'
+title: 'Collate Release Action'
 pullRequest: 'https://github.com/jtannas/release-collator/pull/3'
 prNumber: 3
 author: 'jtannas'
-labels: 
-semverPatch: false
+labels:  semver-patch 
+semverPatch: true
 semverMinor: false
 semverMajor: false
 semverEpoch: false
