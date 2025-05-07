@@ -1,0 +1,9 @@
+title: 'test different ref to entrypoint'
+pullRequest: 'https://github.com/jtannas/release-collator/pull/3'
+prNumber: 3
+author: 'jtannas'
+labels: 
+semverPatch: false
+semverMinor: false
+semverMajor: false
+semverEpoch: false
