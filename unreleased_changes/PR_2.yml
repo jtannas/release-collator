@@ -1,0 +1,9 @@
+title: 'Collate Release Action'
+pullRequest: 'https://github.com/jtannas/release-collator/pull/2'
+prNumber: 2
+author: 'jtannas'
+labels: 
+semverPatch: false
+semverMinor: false
+semverMajor: false
+semverEpoch: false
