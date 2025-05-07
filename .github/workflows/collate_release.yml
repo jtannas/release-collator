@@ -1,0 +1,16 @@
+name: Collate Release Action
+
+on: workflow_dispatch
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  CollateRelease:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Collate Action
+        uses: ./.github/actions/CollateRelease

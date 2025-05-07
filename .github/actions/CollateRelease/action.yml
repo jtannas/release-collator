@@ -1,0 +1,6 @@
+name: Collate Release Action
+description: Turns the changes from `unreleased_changes` into a release
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

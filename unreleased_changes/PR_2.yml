@@ -1,0 +1,9 @@
+title: 'Collate Release Action Skeleton'
+pullRequest: 'https://github.com/jtannas/release-collator/pull/2'
+prNumber: 2
+author: 'jtannas'
+labels:  semver-patch 
+semverPatch: true
+semverMinor: false
+semverMajor: false
+semverEpoch: false
