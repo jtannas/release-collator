@@ -1,0 +1,12 @@
+name: Collate Release Action
+description: Turns the changes from `unreleased_changes` into a release
+
+inputs:
+  semverLevelOverride:
+    description: Semantic Versioning level
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.who-semverLevelOverride-greet }}
