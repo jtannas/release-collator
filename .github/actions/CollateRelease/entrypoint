@@ -1,0 +1,25 @@
+#!/bin/ruby
+
+require 'yaml'
+# require 'debug'; debugger
+
+unreleased_changes = Dir["./unreleased_changes/*.yml"].map do |fname|
+  change = YAML.load_file(fname)
+  semverLevels = []
+  semverLevels.push(1) if change["semverPatch"]
+  semverLevels.push(2) if change["semverMinor"]
+  semverLevels.push(3) if change["semverMajor"]
+  semverLevels.push(4) if change["semverEpoch"]
+  change["semverLevel"] = semverLevels.max
+  change
+end
+
+case unreleased_changes.map { |c| c["semverLevel"] }.max
+when 0
+  puts "Could not determine semver level. Exiting."
+  return
+when 1 then puts "Creating Patch Release"
+when 2 then puts "Creating Minor Release"
+when 3 then puts "Creating Major Release"
+when 4 then puts "Creating Epoch Release"
+end
