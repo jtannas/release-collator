@@ -1,7 +1,16 @@
 #!/usr/bin/env ruby
 
+require 'erb'
 require 'yaml'
 # require 'debug'; debugger
+
+SEMVER_LABELS = [
+  "Unlabelled Changes",
+  "Patch Changes",
+  "Minor Changes",
+  "Major Changes",
+  "Epoch Changes",
+]
 
 unreleased_changes = Dir["./unreleased_changes/*.yml"].map do |fname|
   change = YAML.load_file(fname)
@@ -10,16 +19,23 @@ unreleased_changes = Dir["./unreleased_changes/*.yml"].map do |fname|
   semverLevels.push(2) if change["semverMinor"]
   semverLevels.push(3) if change["semverMajor"]
   semverLevels.push(4) if change["semverEpoch"]
-  change["semverLevel"] = semverLevels.max
+  change["semverLevel"] = semverLevels.max || 0
+  change["semverLabel"] = SEMVER_LABELS[change["semverLevel"]]
   change
 end
 
-case unreleased_changes.map { |c| c["semverLevel"] }.max
-when 0
-  puts "Could not determine semver level. Exiting."
-  return
-when 1 then puts "Creating Patch Release"
-when 2 then puts "Creating Minor Release"
-when 3 then puts "Creating Major Release"
-when 4 then puts "Creating Epoch Release"
-end
+grouped_changes = unreleased_changes.group_by { |c| c["semverLabel"] }
+
+template_text = <<~ERB
+  # TODO: RELEASE NUMBER
+  <% grouped_changes.each do |semver_label, change_group| %>
+
+  # <%= semver_label %>
+
+  <% change_group.each do |change| %>
+  - [[#<%= change["prNumber"] %>](<%= change["pullRequest"] %>)] <%= change["title"] %>; author: @<%= change["author"] %>; labels: <%= change["labels"] %>
+  <% end %>
+  <% end %>
+ERB
+template = ERB.new(template_text, trim_mode: '<>')
+puts template.result
