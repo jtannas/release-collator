@@ -28,11 +28,12 @@ grouped_changes = unreleased_changes.group_by { |c| c["semverLabel"] }
 
 template_text = <<~ERB
   # TODO: RELEASE NUMBER
-  <% grouped_changes.each do |semver_label, change_group| %>
+  <% SEMVER_LABELS.reverse.each do |semver_label| %>
+  <% next unless grouped_changes[semver_label] %>
 
   # <%= semver_label %>
 
-  <% change_group.each do |change| %>
+  <% grouped_changes[semver_label].each do |change| %>
   - [[#<%= change["prNumber"] %>](<%= change["pullRequest"] %>)] <%= change["title"] %>; author: @<%= change["author"] %>; labels: <%= change["labels"] %>
   <% end %>
   <% end %>
