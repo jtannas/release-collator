@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require 'erb'
+require 'yaml'
+# require 'debug'; debugger
+
+SEMVER_LABELS = [
+  "Unlabelled Changes",
+  "Patch Changes",
+  "Minor Changes",
+  "Major Changes",
+  "Epoch Changes",
+]
+
+unreleased_changes = Dir["./unreleased_changes/*.yml"].map do |fname|
+  change = YAML.load_file(fname)
+  semverLevels = []
+  semverLevels.push(1) if change["semverPatch"]
+  semverLevels.push(2) if change["semverMinor"]
+  semverLevels.push(3) if change["semverMajor"]
+  semverLevels.push(4) if change["semverEpoch"]
+  change["semverLevel"] = semverLevels.max || 0
+  change["semverLabel"] = SEMVER_LABELS[change["semverLevel"]]
+  change
+end
+
+grouped_changes = unreleased_changes.group_by { |c| c["semverLabel"] }
+
+template_text = <<~ERB
+  # TODO: RELEASE NUMBER
+  <% SEMVER_LABELS.reverse.each do |semver_label| %>
+  <% next unless grouped_changes[semver_label] %>
+
+  # <%= semver_label %>
+
+  <% grouped_changes[semver_label].each do |change| %>
+  - [[#<%= change["prNumber"] %>](<%= change["pullRequest"] %>)] <%= change["title"] %>; author: @<%= change["author"] %>; labels: <%= change["labels"] %>
+  <% end %>
+  <% end %>
+ERB
+template = ERB.new(template_text, trim_mode: '<>')
+puts template.result
